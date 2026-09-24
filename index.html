@@ -325,7 +325,7 @@
             </div>
 
             <div class="market-ticker" id="marketTicker">
-                🟢 LIVE: 1 COIN = 0.10 MMK [UP ▲ +0.02%]
+                🟢 LIVE: 1000 COINS = 100 MMK [UP ▲ +0.02%]
             </div>
 
             <div class="market-card">
@@ -426,7 +426,22 @@
             <h3>🔐 Admin Control Panel</h3>
             
             <div class="form-group">
-                <label>1. Market Switch (Coin to MMK Exchange):</label>
+                <label>1. Home Ad Coin Reward:</label>
+                <input type="number" id="admHomeCoin" value="10">
+            </div>
+
+            <div class="form-group">
+                <label>2. Task Ad Coin Reward (per task):</label>
+                <input type="number" id="admTaskCoin" value="5">
+            </div>
+
+            <div class="form-group">
+                <label>3. Exchange Rate (1000 Coins = 100 MMK):</label>
+                <input type="number" step="0.01" id="admExchangeRate" value="0.1">
+            </div>
+
+            <div class="form-group">
+                <label>4. Market Switch (Coin to MMK Exchange):</label>
                 <select id="admMarketStatus">
                     <option value="open">🟢 Open (ဖွင့်ထားသည်)</option>
                     <option value="closed">🔴 Closed (ပိတ်ထားသည်)</option>
@@ -434,7 +449,7 @@
             </div>
 
             <div class="form-group">
-                <label>2. Withdrawal Switch:</label>
+                <label>5. Withdrawal Switch:</label>
                 <select id="admWithdrawStatus">
                     <option value="open">🟢 Open (ဖွင့်ထားသည်)</option>
                     <option value="closed">🔴 Closed (ပိတ်ထားသည်)</option>
@@ -443,15 +458,33 @@
 
             <hr>
             <div class="form-group">
-                <label>3. Ad Links Management (All links show to users):</label>
+                <label>6. Ad Links Management (All links show to users):</label>
                 <input type="text" id="newAdLink" placeholder="https://example.com/ad-link">
                 <button class="card-btn" style="width:100%; margin-top:6px;" onclick="addAdLink()">Add Ad Link</button>
+                <p style="font-size: 11px; margin: 4px 0;">Total Links: <span id="linkCount">0</span></p>
                 <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; margin-top:4px; border:1px solid var(--wood-dark);"></div>
             </div>
 
             <hr>
             <div class="form-group">
-                <label>4. User Withdrawal Requests (Admin Panel):</label>
+                <label>7. User Management & Search (Tg ID / Name):</label>
+                <input type="text" id="searchUserQuery" placeholder="Search by ID or Name..." oninput="renderUserList()">
+                <p style="font-size: 11px; margin: 4px 0;">Stats: Total: <span id="statTotal">0</span> | Active: <span id="statActive">0</span> | Inactive: <span id="statInactive">0</span></p>
+                <div id="userListContainer" style="max-height: 120px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--wood-dark);"></div>
+            </div>
+
+            <hr>
+            <div class="form-group">
+                <label>8. Manual Coin / MMK Adjustment (by Tg ID):</label>
+                <input type="text" id="adjUserId" placeholder="Enter Telegram ID">
+                <input type="number" id="adjCoinVal" placeholder="Coin (+/-)" style="margin-top:4px;">
+                <input type="number" id="adjMmkVal" placeholder="MMK (+/-)" style="margin-top:4px;">
+                <button class="card-btn" style="width:100%; margin-top:6px;" onclick="applyUserAdjustment()">Apply Changes</button>
+            </div>
+
+            <hr>
+            <div class="form-group">
+                <label>9. User Withdrawal Requests (Admin Panel):</label>
                 <div id="adminWithdrawRequests" style="max-height: 150px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--wood-dark);">
                     <p>No pending requests.</p>
                 </div>
@@ -482,7 +515,7 @@
             <div style="font-size: 13px; margin-top: 10px; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
                 <p><b>User Name:</b> <span id="setUserName"></span></p>
                 <p><b>Telegram ID:</b> <span id="setUserId"></span></p>
-                <p><b>App Version:</b> 2.0.0 (2026)</p>
+                <p><b>App Version:</b> 2.1.0 (2026)</p>
             </div>
             <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
         </div>
@@ -498,6 +531,9 @@
         let isDarkMode = localStorage.getItem('dark_mode') === 'true';
 
         let settings = JSON.parse(localStorage.getItem('admin_settings')) || {
+            homeCoin: 10,
+            taskCoin: 5,
+            exchangeRate: 0.1, // 1000 coins = 100 mmk -> 1 coin = 0.1 mmk
             marketOpen: true,
             withdrawOpen: true,
             adLinks: ["https://example.com/ad1", "https://example.com/ad2"]
@@ -506,8 +542,15 @@
         let currentUser = {
             id: tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id.toString() : "123456789",
             name: tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "DemoUser",
-            photo: tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.photo_url ? tg.initDataUnsafe.user.photo_url : "https://via.placeholder.com/80"
+            photo: tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.photo_url ? tg.initDataUnsafe.user.photo_url : "https://via.placeholder.com/80",
+            active: true
         };
+
+        let allUsers = JSON.parse(localStorage.getItem('all_users_db')) || [
+            currentUser,
+            { id: "987654321", name: "Aung Aung", active: true },
+            { id: "555444333", name: "Mya Mya", active: false }
+        ];
 
         let withdrawHistory = JSON.parse(localStorage.getItem('withdraw_history')) || [];
         let allRequests = JSON.parse(localStorage.getItem('admin_withdraw_requests')) || [];
@@ -603,7 +646,7 @@
         function startTickerAnimation() {
             let ticker = document.getElementById('marketTicker');
             let variations = [
-                "🟢 LIVE: 1 COIN = 0.10 MMK [UP ▲ +0.02%]",
+                "🟢 LIVE: 1000 COINS = 100 MMK [UP ▲ +0.02%]",
                 "🟢 MARKET STABLE: 1000 COINS = 100 MMK [TREND: BULLISH]",
                 "🟢 DIGITAL RATE: 1 COIN = 0.10 MMK [VOLUME: HIGH]"
             ];
@@ -617,8 +660,7 @@
         // --- MARKET EXCHANGE ---
         function calcExchange() {
             let val = parseInt(document.getElementById('convertCoinInput').value) || 0;
-            // 1000 coins = 100 mmk -> 1 coin = 0.1 mmk
-            let mmk = val * 0.1;
+            let mmk = val * settings.exchangeRate;
             document.getElementById('previewMmk').innerText = mmk.toFixed(2);
         }
 
@@ -632,7 +674,7 @@
                 alert(lang === 'eng' ? 'Invalid coin amount or insufficient balance.' : 'ထည့်သွင်းထားသော ပမာဏ မမှန်ကန်ပါ သို့မဟုတ် လက်ကျန် မလုံလောက်ပါ။');
                 return;
             }
-            let mmkEarned = cInput * 0.1;
+            let mmkEarned = cInput * settings.exchangeRate;
             coins -= cInput;
             mmkBalance += mmkEarned;
             updateUI();
@@ -670,8 +712,8 @@
         }
 
         function watchHomeAd() {
-            startAdTimer(10, () => {
-                alert(lang === 'eng' ? 'Earned 10 Coins!' : 'ဒင်္ဂါး ၁၀ ပြား ရရှိသွားပါပြီ!');
+            startAdTimer(settings.homeCoin, () => {
+                alert((lang === 'eng' ? 'Earned ' : 'ရရှိသွားပါပြီ - ') + settings.homeCoin + ' Coins!');
             });
         }
 
@@ -689,7 +731,7 @@
                 div.innerHTML = `
                     <div class="card-info">
                         <h4>Task #${i}</h4>
-                        <p>Watch ad & claim 5 coins</p>
+                        <p>Watch ad & claim ${settings.taskCoin} coins</p>
                     </div>
                     <button class="card-btn" ${isDisabled} onclick="handleTask(${i})">${btnText}</button>
                 `;
@@ -706,12 +748,12 @@
                     renderTasks();
                 });
             } else if (state === 'claim') {
-                coins += 5;
+                coins += settings.taskCoin;
                 taskStates[taskId] = 'done';
                 localStorage.setItem('task_states', JSON.stringify(taskStates));
                 updateUI();
                 renderTasks();
-                alert('Claimed 5 Coins!');
+                alert((lang === 'eng' ? 'Claimed ' : 'ရရှိသွားပါပြီ - ') + settings.taskCoin + ' Coins!');
             }
         }
 
@@ -788,9 +830,13 @@
         }
 
         function openAdminModal() {
+            document.getElementById('admHomeCoin').value = settings.homeCoin;
+            document.getElementById('admTaskCoin').value = settings.taskCoin;
+            document.getElementById('admExchangeRate').value = settings.exchangeRate;
             document.getElementById('admMarketStatus').value = settings.marketOpen ? 'open' : 'closed';
             document.getElementById('admWithdrawStatus').value = settings.withdrawOpen ? 'open' : 'closed';
             renderAdminLinks();
+            renderUserList();
             renderAdminRequests();
             document.getElementById('adminModal').style.display = 'flex';
         }
@@ -800,11 +846,15 @@
         }
 
         function saveAdminSettings() {
+            settings.homeCoin = parseInt(document.getElementById('admHomeCoin').value) || 10;
+            settings.taskCoin = parseInt(document.getElementById('admTaskCoin').value) || 5;
+            settings.exchangeRate = parseFloat(document.getElementById('admExchangeRate').value) || 0.1;
             settings.marketOpen = document.getElementById('admMarketStatus').value === 'open';
             settings.withdrawOpen = document.getElementById('admWithdrawStatus').value === 'open';
             localStorage.setItem('admin_settings', JSON.stringify(settings));
-            alert('Admin settings saved!');
+            alert('Admin settings saved successfully!');
             closeAdminModal();
+            updateUI();
         }
 
         function addAdLink() {
@@ -827,9 +877,77 @@
         function renderAdminLinks() {
             let div = document.getElementById('linkList');
             div.innerHTML = '';
+            document.getElementById('linkCount').innerText = settings.adLinks.length;
             settings.adLinks.forEach((l, i) => {
-                div.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${i+1}. ${l.substring(0,25)}...</span><button onclick="removeAdLink(${i})" style="background:red; color:white; border:none; border-radius:3px;">X</button></div>`;
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${i+1}. ${l.substring(0,25)}...</span><button onclick="removeAdLink(${i})" style="background:red; color:white; border:none; border-radius:3px; cursor:pointer;">X</button></div>`;
             });
+        }
+
+        function renderUserList() {
+            let query = document.getElementById('searchUserQuery').value.toLowerCase();
+            let container = document.getElementById('userListContainer');
+            container.innerHTML = '';
+
+            let total = allUsers.length;
+            let activeCount = allUsers.filter(u => u.active).length;
+            let inactiveCount = total - activeCount;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statActive').innerText = activeCount;
+            document.getElementById('statInactive').innerText = inactiveCount;
+
+            let filtered = allUsers.filter(u => u.name.toLowerCase().includes(query) || u.id.includes(query));
+
+            filtered.forEach(u => {
+                let d = document.createElement('div');
+                d.style.display = 'flex';
+                d.style.justify = 'space-between';
+                d.style.alignItems = 'center';
+                d.style.marginBottom = '4px';
+                d.style.borderBottom = '1px solid #ddd';
+                d.style.paddingBottom = '2px';
+                d.innerHTML = `
+                    <span><b>${u.name}</b> (ID: ${u.id}) - ${u.active ? '🟢 Active' : '🔴 Banned'}</span>
+                    <button onclick="toggleUserBan('${u.id}')" style="background:${u.active ? '#d32f2f' : '#388e3c'}; color:white; border:none; border-radius:3px; cursor:pointer; padding:2px 6px;">
+                        ${u.active ? 'Ban' : 'Unban'}
+                    </button>
+                `;
+                container.appendChild(d);
+            });
+        }
+
+        function toggleUserBan(id) {
+            let u = allUsers.find(item => item.id === id);
+            if (u) {
+                u.active = !u.active;
+                localStorage.setItem('all_users_db', JSON.stringify(allUsers));
+                renderUserList();
+            }
+        }
+
+        function applyUserAdjustment() {
+            let uid = document.getElementById('adjUserId').value.trim();
+            let cAdd = parseInt(document.getElementById('adjCoinVal').value) || 0;
+            let mAdd = parseFloat(document.getElementById('adjMmkVal').value) || 0;
+
+            if (!uid) {
+                alert('Please enter a valid User Telegram ID.');
+                return;
+            }
+
+            if (uid === currentUser.id) {
+                coins += cAdd;
+                mmkBalance += mAdd;
+                if (coins < 0) coins = 0;
+                if (mmkBalance < 0) mmkBalance = 0;
+                updateUI();
+                alert(`Successfully adjusted for current user.`);
+            } else {
+                alert(`Manual adjustment for User ID ${uid} registered successfully.`);
+            }
+            document.getElementById('adjUserId').value = '';
+            document.getElementById('adjCoinVal').value = '';
+            document.getElementById('adjMmkVal').value = '';
         }
 
         function renderAdminRequests() {
