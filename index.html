@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coin Reward Mini App</title>
+    <title>Real money</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #2b4522;
-            --card-bg: #fef4e7;
-            --text-color: #3b2314;
-            --wood-dark: #6e4724;
-            --wood-light: #b58145;
-            --accent-green: #388e3c;
-            --nav-bg: #4a2c11;
+            --bg-color: #fce4ec;
+            --card-bg: #ffffff;
+            --text-color: #880e4f;
+            --primary-pink: #d81b60;
+            --secondary-pink: #f06292;
+            --accent-green: #2e7d32;
+            --nav-bg: #ad1457;
+            --nav-text: #f8bbd0;
         }
 
         body.dark-mode {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --wood-dark: #333333;
-            --wood-light: #444444;
-            --accent-green: #2e7d32;
+            --text-color: #f48fb1;
+            --primary-pink: #c2185b;
+            --secondary-pink: #880e4f;
+            --accent-green: #388e3c;
             --nav-bg: #1a1a1a;
+            --nav-text: #f48fb1;
         }
 
         body {
@@ -53,13 +55,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--secondary-pink);
             padding: 4px 12px 4px 4px;
             border-radius: 30px;
             color: #fff;
             font-size: 14px;
             cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid var(--primary-pink);
         }
 
         .user-profile-badge img {
@@ -76,7 +78,7 @@
 
         .icon-btn {
             background: var(--card-bg);
-            border: 2px solid var(--wood-dark);
+            border: 2px solid var(--primary-pink);
             color: var(--text-color);
             padding: 6px 10px;
             border-radius: 12px;
@@ -86,12 +88,12 @@
         }
 
         .balance-card {
-            background: linear-gradient(145deg, #c48b47, #965d25);
-            border: 4px solid #523113;
+            background: linear-gradient(145deg, #d81b60, #ad1457);
+            border: 4px solid #880e4f;
             border-radius: 20px;
             padding: 20px;
             color: white;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 16px rgba(216, 27, 96, 0.3);
             margin-bottom: 16px;
         }
 
@@ -126,7 +128,7 @@
 
         .action-btn {
             background: var(--card-bg);
-            border: 3px solid var(--wood-dark);
+            border: 3px solid var(--primary-pink);
             color: var(--text-color);
             padding: 14px;
             border-radius: 14px;
@@ -136,19 +138,19 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .card-item {
             background: var(--card-bg);
-            border: 3px solid var(--wood-dark);
+            border: 3px solid var(--primary-pink);
             border-radius: 14px;
             padding: 14px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .card-info h4 {
@@ -164,9 +166,9 @@
         }
 
         .card-btn {
-            background: #e0a96d;
-            border: 2px solid var(--wood-dark);
-            color: #3b2314;
+            background: var(--secondary-pink);
+            border: 2px solid var(--primary-pink);
+            color: #fff;
             padding: 8px 16px;
             border-radius: 10px;
             font-weight: bold;
@@ -179,23 +181,21 @@
             cursor: not-allowed;
         }
 
-        /* Digital Market & Ticker styling */
         .market-ticker {
             background: #111;
-            color: #00ff66;
+            color: #ff4081;
             font-family: monospace;
             padding: 10px;
             border-radius: 10px;
-            border: 2px solid #333;
+            border: 2px solid var(--primary-pink);
             margin-bottom: 16px;
             text-align: center;
-            font-size: 15px;
-            box-shadow: inset 0 0 10px rgba(0,255,102,0.2);
+            font-size: 14px;
         }
 
         .market-card {
             background: var(--card-bg);
-            border: 3px solid var(--wood-dark);
+            border: 3px solid var(--primary-pink);
             border-radius: 16px;
             padding: 16px;
             text-align: center;
@@ -208,7 +208,7 @@
             left: 0;
             right: 0;
             background: var(--nav-bg);
-            border-top: 3px solid #2e1a09;
+            border-top: 3px solid var(--primary-pink);
             display: flex;
             justify-content: space-around;
             padding: 8px 0;
@@ -218,7 +218,7 @@
         .nav-item {
             background: none;
             border: none;
-            color: #c8ad93;
+            color: var(--nav-text);
             font-size: 11px;
             display: flex;
             flex-direction: column;
@@ -229,7 +229,8 @@
         }
 
         .nav-item.active {
-            color: #ffd54f;
+            color: #fff;
+            font-weight: bold;
         }
 
         .nav-item span.icon {
@@ -244,7 +245,6 @@
             display: block;
         }
 
-        /* Modal styling */
         .modal {
             display: none;
             position: fixed;
@@ -259,7 +259,7 @@
 
         .modal-content {
             background: var(--card-bg);
-            border: 4px solid var(--wood-dark);
+            border: 4px solid var(--primary-pink);
             border-radius: 16px;
             width: 100%;
             max-width: 400px;
@@ -273,7 +273,7 @@
         .modal-content h3 { margin-top: 0; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 2px solid var(--wood-dark); border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 2px solid var(--primary-pink); border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); }
         .close-btn { background: #d32f2f; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
     </style>
 </head>
@@ -288,7 +288,8 @@
             </div>
             <div class="top-btns">
                 <button class="icon-btn" onclick="toggleLang()" id="langBtn">ENG</button>
-                <button class="icon-btn" onclick="checkAdminPassword()">⚙️</button>
+                <button class="icon-btn" onclick="openSettingsModal()">⚙️</button>
+                <button class="icon-btn" onclick="checkAdminPassword()">🔑</button>
             </div>
         </div>
 
@@ -306,7 +307,7 @@
                 <div class="card-item" style="margin:0;">
                     <div class="card-info">
                         <h4 id="tEarnCoinTitle">Earn your coin</h4>
-                        <p id="tEarnCoinSub">Watch ad & earn coins</p>
+                        <p id="tEarnCoinSub">Watch ad & earn coins (Limit: <span id="adLimitCount">50</span>/50)</p>
                     </div>
                     <button class="card-btn" id="homeWatchBtn" onclick="watchHomeAd()">Watch</button>
                 </div>
@@ -320,30 +321,30 @@
         <!-- MARKET TAB -->
         <div id="marketTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 12px;">
-                <h2 style="margin:0;">📈 Digital Coin Market</h2>
-                <p style="font-size:12px; opacity:0.8;">Live Rate: 1000 Coins = 100 MMK</p>
+                <h2 style="margin:0;">📈 Real money Market</h2>
+                <p id="marketRateDisplay" style="font-size:12px; opacity:0.8;">Live Rate: Loading...</p>
             </div>
 
             <div class="market-ticker" id="marketTicker">
-                🟢 LIVE: 1000 COINS = 100 MMK [UP ▲ +0.02%]
+                💖 REAL MONEY LIVE EXCHANGE SYSTEM ACTIVE 💖
             </div>
 
             <div class="market-card">
                 <h3>🔄 Coin to MMK Converter</h3>
                 <p style="font-size:13px; margin-bottom:10px;">ငွေကြေးလဲလှယ်ရန် လိုအပ်သော ပမာဏထည့်ပါ</p>
                 <div class="form-group">
-                    <input type="number" id="convertCoinInput" placeholder="Enter Coins (e.g. 1000)" oninput="calcExchange()">
+                    <input type="number" id="convertCoinInput" placeholder="Enter Coins" oninput="calcExchange()">
                 </div>
-                <p style="font-size: 14px; font-weight: bold; margin: 8px 0;">You will get: <span id="previewMmk" style="color:#388e3c;">0.00</span> MMK</p>
-                <button class="card-btn" style="width:100%; background:#388e3c; color:white;" onclick="executeCoinExchange()">Exchange Now</button>
+                <p style="font-size: 14px; font-weight: bold; margin: 8px 0;">You will get: <span id="previewMmk" style="color:#d81b60;">0.00</span> MMK</p>
+                <button class="card-btn" style="width:100%;" onclick="executeCoinExchange()">Exchange Now</button>
             </div>
         </div>
 
         <!-- TASKS TAB -->
         <div id="tasksTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 16px;">
-                <h2 style="margin: 0;" id="tTaskHeader">📋 Tasks Center</h2>
-                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Complete tasks and claim coins</p>
+                <h2 style="margin: 0;" id="tTaskHeader">📋 Tasks Center (10 Tasks)</h2>
+                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Complete 10 tasks and claim coins</p>
             </div>
             <div id="taskListContainer"></div>
         </div>
@@ -351,7 +352,7 @@
         <!-- PROFILE TAB -->
         <div id="profileTab" class="tab-content">
             <div class="card-item" style="flex-direction: column; text-align: center; gap: 8px;">
-                <img id="profileUserPic" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--wood-dark); object-fit:cover;" alt="User">
+                <img id="profileUserPic" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary-pink); object-fit:cover;" alt="User">
                 <h3 id="profileUserName" style="margin:0;">User Name</h3>
                 <p style="margin:0; font-size:12px;">Telegram ID: <span id="profileUserId">123456</span></p>
             </div>
@@ -359,7 +360,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
                 <div class="card-item" style="flex-direction: column; text-align:center; margin:0;">
                     <span style="font-size:12px; opacity:0.8;">My Coins</span>
-                    <h3 id="profileCoinVal" style="margin:4px 0; color:#c48b47;">0</h3>
+                    <h3 id="profileCoinVal" style="margin:4px 0; color:var(--primary-pink);">0</h3>
                 </div>
                 <div class="card-item" style="flex-direction: column; text-align:center; margin:0;">
                     <span style="font-size:12px; opacity:0.8;">My MMK</span>
@@ -396,6 +397,24 @@
         </button>
     </div>
 
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h3>⚙️ Settings & User Info</h3>
+            <div class="form-group">
+                <label>Dark Mode / Light Mode:</label>
+                <button class="card-btn" style="width:100%;" onclick="toggleDarkMode()">Toggle Dark / Light Mode</button>
+            </div>
+            <div style="font-size: 13px; margin-top: 15px; background:rgba(0,0,0,0.05); padding:12px; border-radius:8px;">
+                <p><b>App Name:</b> Real money</p>
+                <p><b>User Name:</b> <span id="setUserName"></span></p>
+                <p><b>Telegram ID:</b> <span id="setUserId"></span></p>
+                <p><b>App Version:</b> 3.0.0 (2026)</p>
+            </div>
+            <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
+        </div>
+    </div>
+
     <!-- WITHDRAW MODAL -->
     <div class="modal" id="withdrawModal">
         <div class="modal-content">
@@ -412,7 +431,7 @@
                 <input type="text" id="withdrawPhone" placeholder="09xxxxxxxxx">
             </div>
             <div class="form-group">
-                <label>Amount in MMK (Coins will be auto-deducted):</label>
+                <label>Amount in MMK:</label>
                 <input type="number" id="withdrawMmkAmount" placeholder="Enter MMK amount">
             </div>
             <button class="card-btn" style="background:#388e3c; color:white; width:100%;" onclick="submitWithdrawal()">Submit Request</button>
@@ -436,12 +455,18 @@
             </div>
 
             <div class="form-group">
-                <label>3. Exchange Rate (1000 Coins = 100 MMK):</label>
-                <input type="number" step="0.01" id="admExchangeRate" value="0.1">
+                <label>3. Exchange Rate (Coin to MMK Custom Config):</label>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <input type="number" id="admExCoins" value="1000" placeholder="Coins">
+                    <span>Coins =</span>
+                    <input type="number" id="admExMmk" value="100" placeholder="MMK">
+                    <span>MMK</span>
+                </div>
+                <p style="font-size:11px; opacity:0.8; margin:4px 0;">(ဥပမာ - ၁၀၀၀ Coins လျှင် ၁၀၀ MMK ဟု အလွယ်တကူ သတ်မှတ်နိုင်သည်)</p>
             </div>
 
             <div class="form-group">
-                <label>4. Market Switch (Coin to MMK Exchange):</label>
+                <label>4. Market Switch:</label>
                 <select id="admMarketStatus">
                     <option value="open">🟢 Open (ဖွင့်ထားသည်)</option>
                     <option value="closed">🔴 Closed (ပိတ်ထားသည်)</option>
@@ -458,24 +483,24 @@
 
             <hr>
             <div class="form-group">
-                <label>6. Ad Links Management (All links show to users):</label>
+                <label>6. Ad Links Management:</label>
                 <input type="text" id="newAdLink" placeholder="https://example.com/ad-link">
                 <button class="card-btn" style="width:100%; margin-top:6px;" onclick="addAdLink()">Add Ad Link</button>
                 <p style="font-size: 11px; margin: 4px 0;">Total Links: <span id="linkCount">0</span></p>
-                <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; margin-top:4px; border:1px solid var(--wood-dark);"></div>
+                <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; margin-top:4px; border:1px solid var(--primary-pink);"></div>
             </div>
 
             <hr>
             <div class="form-group">
-                <label>7. User Management & Search (Tg ID / Name):</label>
+                <label>7. User Management & Search:</label>
                 <input type="text" id="searchUserQuery" placeholder="Search by ID or Name..." oninput="renderUserList()">
-                <p style="font-size: 11px; margin: 4px 0;">Stats: Total: <span id="statTotal">0</span> | Active: <span id="statActive">0</span> | Inactive: <span id="statInactive">0</span></p>
-                <div id="userListContainer" style="max-height: 120px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--wood-dark);"></div>
+                <p style="font-size: 11px; margin: 4px 0;">Stats: Total: <span id="statTotal">0</span> | Active: <span id="statActive">0</span> | Banned: <span id="statInactive">0</span></p>
+                <div id="userListContainer" style="max-height: 100px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-pink);"></div>
             </div>
 
             <hr>
             <div class="form-group">
-                <label>8. Manual Coin / MMK Adjustment (by Tg ID):</label>
+                <label>8. Manual Coin / MMK Adjustment:</label>
                 <input type="text" id="adjUserId" placeholder="Enter Telegram ID">
                 <input type="number" id="adjCoinVal" placeholder="Coin (+/-)" style="margin-top:4px;">
                 <input type="number" id="adjMmkVal" placeholder="MMK (+/-)" style="margin-top:4px;">
@@ -484,13 +509,13 @@
 
             <hr>
             <div class="form-group">
-                <label>9. User Withdrawal Requests (Admin Panel):</label>
-                <div id="adminWithdrawRequests" style="max-height: 150px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--wood-dark);">
+                <label>9. Withdrawal Requests:</label>
+                <div id="adminWithdrawRequests" style="max-height: 120px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-pink);">
                     <p>No pending requests.</p>
                 </div>
             </div>
 
-            <button class="card-btn" style="background:#4a2c11; color:#fff; width:100%; margin-top:10px;" onclick="saveAdminSettings()">Save Settings</button>
+            <button class="card-btn" style="background:#ad1457; color:#fff; width:100%; margin-top:10px;" onclick="saveAdminSettings()">Save Settings</button>
             <button class="close-btn" onclick="closeAdminModal()">Close</button>
         </div>
     </div>
@@ -499,25 +524,8 @@
     <div class="modal" id="adModal">
         <div class="modal-content" style="text-align: center;">
             <h3>📺 Watching Advertisement</h3>
-            <p id="adTimerText">Please wait 15 seconds...</p>
-            <h1 id="countdownNum" style="font-size: 40px; color: #c48b47; margin: 10px 0;">15</h1>
-        </div>
-    </div>
-
-    <!-- SETTINGS / SETTINGS PANEL MODAL (Dark Mode & Info) -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <h3>⚙️ Settings & User Info</h3>
-            <div class="form-group">
-                <label>Dark Mode:</label>
-                <button class="card-btn" style="width:100%;" onclick="toggleDarkMode()">Toggle Dark / Light Mode</button>
-            </div>
-            <div style="font-size: 13px; margin-top: 10px; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
-                <p><b>User Name:</b> <span id="setUserName"></span></p>
-                <p><b>Telegram ID:</b> <span id="setUserId"></span></p>
-                <p><b>App Version:</b> 2.1.0 (2026)</p>
-            </div>
-            <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
+            <p id="adTimerText">Please wait 10 seconds...</p>
+            <h1 id="countdownNum" style="font-size: 40px; color: var(--primary-pink); margin: 10px 0;">10</h1>
         </div>
     </div>
 
@@ -530,13 +538,21 @@
         let mmkBalance = parseFloat(localStorage.getItem('user_mmk')) || 0.0;
         let isDarkMode = localStorage.getItem('dark_mode') === 'true';
 
+        // Admin Settings including custom exchange rate (e.g. 1000 coins = 100 mmk)
         let settings = JSON.parse(localStorage.getItem('admin_settings')) || {
             homeCoin: 10,
             taskCoin: 5,
-            exchangeRate: 0.1, // 1000 coins = 100 mmk -> 1 coin = 0.1 mmk
+            exCoins: 1000,
+            exMmk: 100,
             marketOpen: true,
             withdrawOpen: true,
             adLinks: ["https://example.com/ad1", "https://example.com/ad2"]
+        };
+
+        // 50 ads limit logic per 24 hours
+        let adLimitData = JSON.parse(localStorage.getItem('ad_limit_data')) || {
+            count: 0,
+            resetTime: Date.now() + 86400000
         };
 
         let currentUser = {
@@ -552,7 +568,6 @@
             { id: "555444333", name: "Mya Mya", active: false }
         ];
 
-        let withdrawHistory = JSON.parse(localStorage.getItem('withdraw_history')) || [];
         let allRequests = JSON.parse(localStorage.getItem('admin_withdraw_requests')) || [];
         let taskStates = JSON.parse(localStorage.getItem('task_states')) || {};
 
@@ -560,11 +575,12 @@
 
         function initApp() {
             if (isDarkMode) document.body.classList.add('dark-mode');
+            checkAdLimitReset();
             updateUI();
             renderTasks();
             updateLanguageText();
             initUserData();
-            startTickerAnimation();
+            updateMarketRateDisplay();
         }
 
         function initUserData() {
@@ -585,6 +601,10 @@
             } else {
                 document.body.classList.remove('dark-mode');
             }
+        }
+
+        function openSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'flex';
         }
 
         function switchTab(tabName) {
@@ -613,8 +633,8 @@
                 document.getElementById('tEarnCoinSub').innerText = "Watch ad & earn coins";
                 document.getElementById('homeWatchBtn').innerText = "Watch";
                 document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 Withdraw to KBZ / Wave</span><span>➔</span>";
-                document.getElementById('tTaskHeader').innerText = "📋 Tasks Center";
-                document.getElementById('tTaskSub').innerText = "Complete tasks and claim coins";
+                document.getElementById('tTaskHeader').innerText = "📋 Tasks Center (10 Tasks)";
+                document.getElementById('tTaskSub').innerText = "Complete 10 tasks and claim coins";
                 document.getElementById('tNavHome').innerText = "Home";
                 document.getElementById('tNavMarket').innerText = "Market";
                 document.getElementById('tNavTasks').innerText = "Tasks";
@@ -625,8 +645,8 @@
                 document.getElementById('tEarnCoinSub').innerText = "ကြော်ငြာကြည့်ပြီး ဆုလာဘ်ယူပါ";
                 document.getElementById('homeWatchBtn').innerText = "ကြည့်မည်";
                 document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 KBZ / Wave သို့ ငွေထုတ်မည်</span><span>➔</span>";
-                document.getElementById('tTaskHeader').innerText = "📋 တာဝန်များ (Tasks)";
-                document.getElementById('tTaskSub').innerText = "ကြော်ငြာကြည့်၍ တာဝန်ပြီးမြောက်အောင်လုပ်ပါ";
+                document.getElementById('tTaskHeader').innerText = "📋 တာဝန်များ (တာဝန် ၁၀ ခု)";
+                document.getElementById('tTaskSub').innerText = "တာဝန် ၁၀ ခုကို ကြည့်၍ ဆုလာဘ်ရယူပါ";
                 document.getElementById('tNavHome').innerText = "ပင်မ";
                 document.getElementById('tNavMarket').innerText = "စျေးကွက်";
                 document.getElementById('tNavTasks').innerText = "တာဝန်များ";
@@ -639,28 +659,31 @@
             document.getElementById('mmkVal').innerText = mmkBalance.toFixed(2);
             document.getElementById('profileCoinVal').innerText = coins;
             document.getElementById('profileMmkVal').innerText = mmkBalance.toFixed(2);
+            document.getElementById('adLimitCount').innerText = (50 - adLimitData.count);
             localStorage.setItem('user_coins', coins);
             localStorage.setItem('user_mmk', mmkBalance);
         }
 
-        function startTickerAnimation() {
-            let ticker = document.getElementById('marketTicker');
-            let variations = [
-                "🟢 LIVE: 1000 COINS = 100 MMK [UP ▲ +0.02%]",
-                "🟢 MARKET STABLE: 1000 COINS = 100 MMK [TREND: BULLISH]",
-                "🟢 DIGITAL RATE: 1 COIN = 0.10 MMK [VOLUME: HIGH]"
-            ];
-            let i = 0;
-            setInterval(() => {
-                i = (i + 1) % variations.length;
-                ticker.innerText = variations[i];
-            }, 4000);
+        function updateMarketRateDisplay() {
+            let rateText = `Live Rate: ${settings.exCoins} Coins = ${settings.exMmk} MMK`;
+            document.getElementById('marketRateDisplay').innerText = rateText;
+        }
+
+        // Check 24 hours reset for 50 ad limit
+        function checkAdLimitReset() {
+            let now = Date.now();
+            if (now >= adLimitData.resetTime) {
+                adLimitData.count = 0;
+                adLimitData.resetTime = now + 86400000; // 24 hours
+                localStorage.setItem('ad_limit_data', JSON.stringify(adLimitData));
+            }
         }
 
         // --- MARKET EXCHANGE ---
         function calcExchange() {
             let val = parseInt(document.getElementById('convertCoinInput').value) || 0;
-            let mmk = val * settings.exchangeRate;
+            let rateMultiplier = settings.exMmk / settings.exCoins;
+            let mmk = val * rateMultiplier;
             document.getElementById('previewMmk').innerText = mmk.toFixed(2);
         }
 
@@ -674,7 +697,8 @@
                 alert(lang === 'eng' ? 'Invalid coin amount or insufficient balance.' : 'ထည့်သွင်းထားသော ပမာဏ မမှန်ကန်ပါ သို့မဟုတ် လက်ကျန် မလုံလောက်ပါ။');
                 return;
             }
-            let mmkEarned = cInput * settings.exchangeRate;
+            let rateMultiplier = settings.exMmk / settings.exCoins;
+            let mmkEarned = cInput * rateMultiplier;
             coins -= cInput;
             mmkBalance += mmkEarned;
             updateUI();
@@ -682,7 +706,7 @@
             alert((lang === 'eng' ? 'Successfully exchanged to ' : 'အောင်မြင်စွာ လဲလှယ်ပြီးပါပြီ - ') + mmkEarned.toFixed(2) + ' MMK');
         }
 
-        // --- ADS LOGIC (All admin links open) ---
+        // --- ADS LOGIC ---
         function triggerAllAds() {
             if (settings.adLinks && settings.adLinks.length > 0) {
                 settings.adLinks.forEach(link => {
@@ -691,11 +715,19 @@
             }
         }
 
-        function startAdTimer(rewardCoins, callback) {
+        function startAdTimer(rewardCoins, isHomeAd, callback) {
+            if (isHomeAd) {
+                checkAdLimitReset();
+                if (adLimitData.count >= 50) {
+                    alert(lang === 'eng' ? 'Daily limit of 50 ads reached. Please try again after 24 hours.' : 'ယနေ့အတွက် ကြော်ငြာကြည့်ရှုမှု အကြိမ် ၅၀ ပြည့်သွားပါပြီ။ ၂၄ နာရီပြည့်မှ ပြန်လည်ကြည့်ရှုနိုင်ပါသည်။');
+                    return;
+                }
+            }
+
             triggerAllAds();
             let modal = document.getElementById('adModal');
             modal.style.display = 'flex';
-            let timeLeft = 15;
+            let timeLeft = 10;
             document.getElementById('countdownNum').innerText = timeLeft;
 
             let timer = setInterval(() => {
@@ -704,6 +736,13 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     modal.style.display = 'none';
+
+                    if (isHomeAd) {
+                        adLimitData.count++;
+                        localStorage.setItem('ad_limit_data', JSON.stringify(adLimitData));
+                        updateUI();
+                    }
+
                     coins += rewardCoins;
                     updateUI();
                     if (callback) callback();
@@ -712,16 +751,16 @@
         }
 
         function watchHomeAd() {
-            startAdTimer(settings.homeCoin, () => {
+            startAdTimer(settings.homeCoin, true, () => {
                 alert((lang === 'eng' ? 'Earned ' : 'ရရှိသွားပါပြီ - ') + settings.homeCoin + ' Coins!');
             });
         }
 
-        // --- TASKS ---
+        // --- TASKS (10 Tasks) ---
         function renderTasks() {
             let container = document.getElementById('taskListContainer');
             container.innerHTML = '';
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 10; i++) {
                 let state = taskStates[i] || 'watch';
                 let btnText = state === 'watch' ? 'Watch Ad' : state === 'claim' ? 'Claim' : 'Done';
                 let isDisabled = state === 'done' ? 'disabled' : '';
@@ -742,7 +781,7 @@
         function handleTask(taskId) {
             let state = taskStates[taskId] || 'watch';
             if (state === 'watch') {
-                startAdTimer(0, () => {
+                startAdTimer(0, false, () => {
                     taskStates[taskId] = 'claim';
                     localStorage.setItem('task_states', JSON.stringify(taskStates));
                     renderTasks();
@@ -775,13 +814,15 @@
             let phone = document.getElementById('withdrawPhone').value.trim();
             let amountMmk = parseFloat(document.getElementById('withdrawMmkAmount').value) || 0;
 
-            if (!phone || amountMmk <= 0 || amountMmk > mmkBalance) {
-                alert(lang === 'eng' ? 'Please enter valid details and valid MMK balance.' : 'ဖုန်းနံပတ်နှင့် ငွေပမာဏကို မှန်ကန်စွာ ထည့်ပါ။');
+            let rateMultiplier = settings.exMmk / settings.exCoins;
+            let requiredCoins = amountMmk / rateMultiplier;
+
+            if (!phone || amountMmk <= 0 || coins < requiredCoins) {
+                alert(lang === 'eng' ? 'Please enter valid details and ensure you have enough coins.' : 'ဖုန်းနံပတ် မှန်ကန်စွာထည့်ပါနှင့် လုံလောက်သော ဒင်္ဂါးပြား မရှိပါ။');
                 return;
             }
 
-            // Auto deduct user mmk balance immediately
-            mmkBalance -= amountMmk;
+            coins -= Math.ceil(requiredCoins);
             updateUI();
 
             let reqId = 'REQ-' + Math.floor(100000 + Math.random() * 900000);
@@ -814,7 +855,7 @@
                 let d = document.createElement('div');
                 d.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
                 d.style.padding = '4px 0';
-                d.innerHTML = `<b>${r.bank}</b> (${r.phone}) - ${r.amount} MMK <br><span style="color:${r.status === 'Sent' ? '#388e3c' : '#c48b47'}">[Status: ${r.status}]</span>`;
+                d.innerHTML = `<b>${r.bank}</b> (${r.phone}) - ${r.amount} MMK <br><span style="color:${r.status === 'Sent' ? '#388e3c' : '#d81b60'}">[Status: ${r.status}]</span>`;
                 container.appendChild(d);
             });
         }
@@ -832,7 +873,8 @@
         function openAdminModal() {
             document.getElementById('admHomeCoin').value = settings.homeCoin;
             document.getElementById('admTaskCoin').value = settings.taskCoin;
-            document.getElementById('admExchangeRate').value = settings.exchangeRate;
+            document.getElementById('admExCoins').value = settings.exCoins;
+            document.getElementById('admExMmk').value = settings.exMmk;
             document.getElementById('admMarketStatus').value = settings.marketOpen ? 'open' : 'closed';
             document.getElementById('admWithdrawStatus').value = settings.withdrawOpen ? 'open' : 'closed';
             renderAdminLinks();
@@ -848,13 +890,15 @@
         function saveAdminSettings() {
             settings.homeCoin = parseInt(document.getElementById('admHomeCoin').value) || 10;
             settings.taskCoin = parseInt(document.getElementById('admTaskCoin').value) || 5;
-            settings.exchangeRate = parseFloat(document.getElementById('admExchangeRate').value) || 0.1;
+            settings.exCoins = parseInt(document.getElementById('admExCoins').value) || 1000;
+            settings.exMmk = parseFloat(document.getElementById('admExMmk').value) || 100;
             settings.marketOpen = document.getElementById('admMarketStatus').value === 'open';
             settings.withdrawOpen = document.getElementById('admWithdrawStatus').value === 'open';
             localStorage.setItem('admin_settings', JSON.stringify(settings));
             alert('Admin settings saved successfully!');
             closeAdminModal();
             updateUI();
+            updateMarketRateDisplay();
         }
 
         function addAdLink() {
@@ -879,7 +923,7 @@
             div.innerHTML = '';
             document.getElementById('linkCount').innerText = settings.adLinks.length;
             settings.adLinks.forEach((l, i) => {
-                div.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${i+1}. ${l.substring(0,25)}...</span><button onclick="removeAdLink(${i})" style="background:red; color:white; border:none; border-radius:3px; cursor:pointer;">X</button></div>`;
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${i+1}. ${l.substring(0,22)}...</span><button onclick="removeAdLink(${i})" style="background:red; color:white; border:none; border-radius:3px; cursor:pointer;">X</button></div>`;
             });
         }
 
