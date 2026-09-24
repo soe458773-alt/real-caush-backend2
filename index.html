@@ -7,25 +7,29 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #fce4ec;
+            --bg-color: #f7f3ee;
             --card-bg: #ffffff;
-            --text-color: #880e4f;
-            --primary-pink: #d81b60;
-            --secondary-pink: #f06292;
-            --accent-green: #2e7d32;
-            --nav-bg: #ad1457;
-            --nav-text: #f8bbd0;
+            --text-color: #4a3b32;
+            --primary-accent: #d4a373;
+            --secondary-accent: #faedcd;
+            --btn-color: #bc6c25;
+            --btn-text: #ffffff;
+            --nav-bg: #ffffff;
+            --nav-text: #8c7a6b;
+            --nav-active: #bc6c25;
         }
 
         body.dark-mode {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #f48fb1;
-            --primary-pink: #c2185b;
-            --secondary-pink: #880e4f;
-            --accent-green: #388e3c;
-            --nav-bg: #1a1a1a;
-            --nav-text: #f48fb1;
+            --bg-color: #1a1614;
+            --card-bg: #26211e;
+            --text-color: #f5ebe0;
+            --primary-accent: #dda15e;
+            --secondary-accent: #3d3530;
+            --btn-color: #dda15e;
+            --btn-text: #1a1614;
+            --nav-bg: #26211e;
+            --nav-text: #b0a499;
+            --nav-active: #dda15e;
         }
 
         body {
@@ -55,13 +59,14 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--secondary-pink);
+            background: var(--card-bg);
             padding: 4px 12px 4px 4px;
             border-radius: 30px;
-            color: #fff;
+            color: var(--text-color);
             font-size: 14px;
             cursor: pointer;
-            border: 2px solid var(--primary-pink);
+            border: 2px solid var(--primary-accent);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .user-profile-badge img {
@@ -78,22 +83,23 @@
 
         .icon-btn {
             background: var(--card-bg);
-            border: 2px solid var(--primary-pink);
+            border: 2px solid var(--primary-accent);
             color: var(--text-color);
             padding: 6px 10px;
             border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .balance-card {
-            background: linear-gradient(145deg, #d81b60, #ad1457);
-            border: 4px solid #880e4f;
+            background: linear-gradient(135deg, #e9d8a6, #dda15e);
+            border: 3px solid #bc6c25;
             border-radius: 20px;
             padding: 20px;
-            color: white;
-            box-shadow: 0 8px 16px rgba(216, 27, 96, 0.3);
+            color: #2b2118;
+            box-shadow: 0 8px 16px rgba(188, 108, 37, 0.15);
             margin-bottom: 16px;
         }
 
@@ -101,7 +107,8 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            opacity: 0.9;
+            opacity: 0.85;
+            font-weight: bold;
         }
 
         .balance-amount {
@@ -113,10 +120,11 @@
         .balance-sub {
             font-size: 14px;
             opacity: 0.9;
-            background: rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.4);
             padding: 4px 8px;
             border-radius: 8px;
             display: inline-block;
+            font-weight: 600;
         }
 
         .action-grid {
@@ -128,7 +136,7 @@
 
         .action-btn {
             background: var(--card-bg);
-            border: 3px solid var(--primary-pink);
+            border: 2px solid var(--primary-accent);
             color: var(--text-color);
             padding: 14px;
             border-radius: 14px;
@@ -138,19 +146,19 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .card-item {
             background: var(--card-bg);
-            border: 3px solid var(--primary-pink);
+            border: 2px solid var(--primary-accent);
             border-radius: 14px;
             padding: 14px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
         }
 
         .card-info h4 {
@@ -166,9 +174,9 @@
         }
 
         .card-btn {
-            background: var(--secondary-pink);
-            border: 2px solid var(--primary-pink);
-            color: #fff;
+            background: var(--btn-color);
+            border: none;
+            color: var(--btn-text);
             padding: 8px 16px;
             border-radius: 10px;
             font-weight: bold;
@@ -176,30 +184,33 @@
         }
 
         .card-btn:disabled {
-            background: #ccc;
-            border-color: #999;
+            background: #d8c8b8;
+            color: #887a6d;
             cursor: not-allowed;
         }
 
         .market-ticker {
-            background: #111;
-            color: #ff4081;
+            background: var(--card-bg);
+            color: var(--btn-color);
             font-family: monospace;
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid var(--primary-pink);
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--primary-accent);
             margin-bottom: 16px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .market-card {
             background: var(--card-bg);
-            border: 3px solid var(--primary-pink);
+            border: 2px solid var(--primary-accent);
             border-radius: 16px;
             padding: 16px;
             text-align: center;
             margin-bottom: 16px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
         }
 
         .bottom-nav {
@@ -208,11 +219,12 @@
             left: 0;
             right: 0;
             background: var(--nav-bg);
-            border-top: 3px solid var(--primary-pink);
+            border-top: 2px solid var(--primary-accent);
             display: flex;
             justify-content: space-around;
             padding: 8px 0;
             z-index: 100;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
         }
 
         .nav-item {
@@ -229,7 +241,7 @@
         }
 
         .nav-item.active {
-            color: #fff;
+            color: var(--nav-active);
             font-weight: bold;
         }
 
@@ -249,7 +261,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -259,7 +271,7 @@
 
         .modal-content {
             background: var(--card-bg);
-            border: 4px solid var(--primary-pink);
+            border: 3px solid var(--primary-accent);
             border-radius: 16px;
             width: 100%;
             max-width: 400px;
@@ -268,13 +280,14 @@
             padding: 20px;
             box-sizing: border-box;
             color: var(--text-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .modal-content h3 { margin-top: 0; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 2px solid var(--primary-pink); border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); }
-        .close-btn { background: #d32f2f; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 2px solid var(--primary-accent); border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); }
+        .close-btn { background: #bc6c25; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
@@ -306,10 +319,10 @@
             <div class="action-grid">
                 <div class="card-item" style="margin:0;">
                     <div class="card-info">
-                        <h4 id="tEarnCoinTitle">Earn your coin</h4>
-                        <p id="tEarnCoinSub">Watch ad & earn coins (Limit: <span id="adLimitCount">50</span>/50)</p>
+                        <h4 id="tEarnCoinTitle">Earn your coin (Ads)</h4>
+                        <p>Limit: <span id="adLimitCount">50</span>/50 left today</p>
                     </div>
-                    <button class="card-btn" id="homeWatchBtn" onclick="watchHomeAd()">Watch</button>
+                    <button class="card-btn" id="homeWatchBtn" onclick="watchHomeAd()">Watch (20s)</button>
                 </div>
                 <button class="action-btn" onclick="openWithdrawModal()" id="tWithdrawBtn">
                     <span>💸 Withdraw to KBZ / Wave</span>
@@ -321,12 +334,12 @@
         <!-- MARKET TAB -->
         <div id="marketTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 12px;">
-                <h2 style="margin:0;">📈 Real money Market</h2>
+                <h2 style="margin:0;">📈 Digital Market Exchange</h2>
                 <p id="marketRateDisplay" style="font-size:12px; opacity:0.8;">Live Rate: Loading...</p>
             </div>
 
             <div class="market-ticker" id="marketTicker">
-                💖 REAL MONEY LIVE EXCHANGE SYSTEM ACTIVE 💖
+                📊 DIGITAL LIVE SYSTEM: COIN/MMK RATE DYNAMICALLY ACTIVE 💹
             </div>
 
             <div class="market-card">
@@ -335,7 +348,7 @@
                 <div class="form-group">
                     <input type="number" id="convertCoinInput" placeholder="Enter Coins" oninput="calcExchange()">
                 </div>
-                <p style="font-size: 14px; font-weight: bold; margin: 8px 0;">You will get: <span id="previewMmk" style="color:#d81b60;">0.00</span> MMK</p>
+                <p style="font-size: 14px; font-weight: bold; margin: 8px 0;">You will get: <span id="previewMmk" style="color:var(--btn-color);">0.00</span> MMK</p>
                 <button class="card-btn" style="width:100%;" onclick="executeCoinExchange()">Exchange Now</button>
             </div>
         </div>
@@ -344,7 +357,7 @@
         <div id="tasksTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 16px;">
                 <h2 style="margin: 0;" id="tTaskHeader">📋 Tasks Center (10 Tasks)</h2>
-                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Complete 10 tasks and claim coins</p>
+                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Watch 20s ad per task & click claim</p>
             </div>
             <div id="taskListContainer"></div>
         </div>
@@ -352,7 +365,7 @@
         <!-- PROFILE TAB -->
         <div id="profileTab" class="tab-content">
             <div class="card-item" style="flex-direction: column; text-align: center; gap: 8px;">
-                <img id="profileUserPic" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary-pink); object-fit:cover;" alt="User">
+                <img id="profileUserPic" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--primary-accent); object-fit:cover;" alt="User">
                 <h3 id="profileUserName" style="margin:0;">User Name</h3>
                 <p style="margin:0; font-size:12px;">Telegram ID: <span id="profileUserId">123456</span></p>
             </div>
@@ -360,11 +373,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
                 <div class="card-item" style="flex-direction: column; text-align:center; margin:0;">
                     <span style="font-size:12px; opacity:0.8;">My Coins</span>
-                    <h3 id="profileCoinVal" style="margin:4px 0; color:var(--primary-pink);">0</h3>
+                    <h3 id="profileCoinVal" style="margin:4px 0; color:var(--btn-color);">0</h3>
                 </div>
                 <div class="card-item" style="flex-direction: column; text-align:center; margin:0;">
                     <span style="font-size:12px; opacity:0.8;">My MMK</span>
-                    <h3 id="profileMmkVal" style="margin:4px 0; color:#388e3c;">0</h3>
+                    <h3 id="profileMmkVal" style="margin:4px 0; color:#bc6c25;">0</h3>
                 </div>
             </div>
 
@@ -405,11 +418,11 @@
                 <label>Dark Mode / Light Mode:</label>
                 <button class="card-btn" style="width:100%;" onclick="toggleDarkMode()">Toggle Dark / Light Mode</button>
             </div>
-            <div style="font-size: 13px; margin-top: 15px; background:rgba(0,0,0,0.05); padding:12px; border-radius:8px;">
+            <div style="font-size: 13px; margin-top: 15px; background:rgba(0,0,0,0.03); padding:12px; border-radius:8px;">
                 <p><b>App Name:</b> Real money</p>
                 <p><b>User Name:</b> <span id="setUserName"></span></p>
                 <p><b>Telegram ID:</b> <span id="setUserId"></span></p>
-                <p><b>App Version:</b> 3.0.0 (2026)</p>
+                <p><b>App Version:</b> 3.1.0 (2026)</p>
             </div>
             <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
         </div>
@@ -434,7 +447,7 @@
                 <label>Amount in MMK:</label>
                 <input type="number" id="withdrawMmkAmount" placeholder="Enter MMK amount">
             </div>
-            <button class="card-btn" style="background:#388e3c; color:white; width:100%;" onclick="submitWithdrawal()">Submit Request</button>
+            <button class="card-btn" style="background:#bc6c25; color:white; width:100%;" onclick="submitWithdrawal()">Submit Request</button>
             <button class="close-btn" onclick="closeWithdrawModal()">Cancel</button>
         </div>
     </div>
@@ -445,24 +458,23 @@
             <h3>🔐 Admin Control Panel</h3>
             
             <div class="form-group">
-                <label>1. Home Ad Coin Reward:</label>
+                <label>1. Home Ad Coin Reward (20s):</label>
                 <input type="number" id="admHomeCoin" value="10">
             </div>
 
             <div class="form-group">
-                <label>2. Task Ad Coin Reward (per task):</label>
+                <label>2. Task Ad Coin Reward (per task, 20s):</label>
                 <input type="number" id="admTaskCoin" value="5">
             </div>
 
             <div class="form-group">
-                <label>3. Exchange Rate (Coin to MMK Custom Config):</label>
+                <label>3. Exchange Rate (Coin to MMK):</label>
                 <div style="display:flex; gap:6px; align-items:center;">
                     <input type="number" id="admExCoins" value="1000" placeholder="Coins">
                     <span>Coins =</span>
                     <input type="number" id="admExMmk" value="100" placeholder="MMK">
                     <span>MMK</span>
                 </div>
-                <p style="font-size:11px; opacity:0.8; margin:4px 0;">(ဥပမာ - ၁၀၀၀ Coins လျှင် ၁၀၀ MMK ဟု အလွယ်တကူ သတ်မှတ်နိုင်သည်)</p>
             </div>
 
             <div class="form-group">
@@ -487,7 +499,7 @@
                 <input type="text" id="newAdLink" placeholder="https://example.com/ad-link">
                 <button class="card-btn" style="width:100%; margin-top:6px;" onclick="addAdLink()">Add Ad Link</button>
                 <p style="font-size: 11px; margin: 4px 0;">Total Links: <span id="linkCount">0</span></p>
-                <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; margin-top:4px; border:1px solid var(--primary-pink);"></div>
+                <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; margin-top:4px; border:1px solid var(--primary-accent);"></div>
             </div>
 
             <hr>
@@ -495,7 +507,7 @@
                 <label>7. User Management & Search:</label>
                 <input type="text" id="searchUserQuery" placeholder="Search by ID or Name..." oninput="renderUserList()">
                 <p style="font-size: 11px; margin: 4px 0;">Stats: Total: <span id="statTotal">0</span> | Active: <span id="statActive">0</span> | Banned: <span id="statInactive">0</span></p>
-                <div id="userListContainer" style="max-height: 100px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-pink);"></div>
+                <div id="userListContainer" style="max-height: 100px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-accent);"></div>
             </div>
 
             <hr>
@@ -510,22 +522,22 @@
             <hr>
             <div class="form-group">
                 <label>9. Withdrawal Requests:</label>
-                <div id="adminWithdrawRequests" style="max-height: 120px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-pink);">
+                <div id="adminWithdrawRequests" style="max-height: 120px; overflow-y:auto; font-size:11px; background:var(--card-bg); padding:4px; border-radius:4px; border:1px solid var(--primary-accent);">
                     <p>No pending requests.</p>
                 </div>
             </div>
 
-            <button class="card-btn" style="background:#ad1457; color:#fff; width:100%; margin-top:10px;" onclick="saveAdminSettings()">Save Settings</button>
+            <button class="card-btn" style="background:#bc6c25; color:#fff; width:100%; margin-top:10px;" onclick="saveAdminSettings()">Save Settings</button>
             <button class="close-btn" onclick="closeAdminModal()">Close</button>
         </div>
     </div>
 
-    <!-- AD WATCHING SIMULATOR MODAL -->
+    <!-- AD WATCHING SIMULATOR MODAL (20s) -->
     <div class="modal" id="adModal">
         <div class="modal-content" style="text-align: center;">
-            <h3>📺 Watching Advertisement</h3>
-            <p id="adTimerText">Please wait 10 seconds...</p>
-            <h1 id="countdownNum" style="font-size: 40px; color: var(--primary-pink); margin: 10px 0;">10</h1>
+            <h3>📺 Watching 20s Advertisement</h3>
+            <p id="adTimerText">Please wait 20 seconds...</p>
+            <h1 id="countdownNum" style="font-size: 40px; color: var(--btn-color); margin: 10px 0;">20</h1>
         </div>
     </div>
 
@@ -538,7 +550,6 @@
         let mmkBalance = parseFloat(localStorage.getItem('user_mmk')) || 0.0;
         let isDarkMode = localStorage.getItem('dark_mode') === 'true';
 
-        // Admin Settings including custom exchange rate (e.g. 1000 coins = 100 mmk)
         let settings = JSON.parse(localStorage.getItem('admin_settings')) || {
             homeCoin: 10,
             taskCoin: 5,
@@ -581,6 +592,7 @@
             updateLanguageText();
             initUserData();
             updateMarketRateDisplay();
+            startDigitalTicker();
         }
 
         function initUserData() {
@@ -629,24 +641,22 @@
         function updateLanguageText() {
             if (lang === 'eng') {
                 document.getElementById('tBalanceTitle').innerText = "Total Balance";
-                document.getElementById('tEarnCoinTitle').innerText = "Earn your coin";
-                document.getElementById('tEarnCoinSub').innerText = "Watch ad & earn coins";
-                document.getElementById('homeWatchBtn').innerText = "Watch";
+                document.getElementById('tEarnCoinTitle').innerText = "Earn your coin (Ads)";
+                document.getElementById('homeWatchBtn').innerText = "Watch (20s)";
                 document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 Withdraw to KBZ / Wave</span><span>➔</span>";
                 document.getElementById('tTaskHeader').innerText = "📋 Tasks Center (10 Tasks)";
-                document.getElementById('tTaskSub').innerText = "Complete 10 tasks and claim coins";
+                document.getElementById('tTaskSub').innerText = "Watch 20s ad per task & claim";
                 document.getElementById('tNavHome').innerText = "Home";
                 document.getElementById('tNavMarket').innerText = "Market";
                 document.getElementById('tNavTasks').innerText = "Tasks";
                 document.getElementById('tNavProfile').innerText = "Profile";
             } else {
                 document.getElementById('tBalanceTitle').innerText = "စုစုပေါင်း လက်ကျန်ငွေ";
-                document.getElementById('tEarnCoinTitle').innerText = "ဒင်္ဂါးပြား ရှာရန်";
-                document.getElementById('tEarnCoinSub').innerText = "ကြော်ငြာကြည့်ပြီး ဆုလာဘ်ယူပါ";
-                document.getElementById('homeWatchBtn').innerText = "ကြည့်မည်";
+                document.getElementById('tEarnCoinTitle').innerText = "ဒင်္ဂါးပြား ရှာရန် (ကြော်ငြာ)";
+                document.getElementById('homeWatchBtn').innerText = "ကြည့်မည် (၂၀ စက္ကန့်)";
                 document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 KBZ / Wave သို့ ငွေထုတ်မည်</span><span>➔</span>";
                 document.getElementById('tTaskHeader').innerText = "📋 တာဝန်များ (တာဝန် ၁၀ ခု)";
-                document.getElementById('tTaskSub').innerText = "တာဝန် ၁၀ ခုကို ကြည့်၍ ဆုလာဘ်ရယူပါ";
+                document.getElementById('tTaskSub').innerText = "တာဝန်တစ်ခုလျှင် ၂၀ စက္ကန့်ကြည့်၍ Claim ပါ";
                 document.getElementById('tNavHome').innerText = "ပင်မ";
                 document.getElementById('tNavMarket').innerText = "စျေးကွက်";
                 document.getElementById('tNavTasks').innerText = "တာဝန်များ";
@@ -669,7 +679,16 @@
             document.getElementById('marketRateDisplay').innerText = rateText;
         }
 
-        // Check 24 hours reset for 50 ad limit
+        function startDigitalTicker() {
+            let ticker = document.getElementById('marketTicker');
+            let fluctuation = 0;
+            setInterval(() => {
+                fluctuation = (Math.random() * 0.4 - 0.2).toFixed(2);
+                let trend = fluctuation >= 0 ? '📈 BULLISH (+' + fluctuation + '%)' : '📉 BEARISH (' + fluctuation + '%)';
+                ticker.innerHTML = `📊 DIGITAL MARKET LIVE: ${settings.exCoins} Coins = ${settings.exMmk} MMK | Status: ${trend}`;
+            }, 4000);
+        }
+
         function checkAdLimitReset() {
             let now = Date.now();
             if (now >= adLimitData.resetTime) {
@@ -706,7 +725,7 @@
             alert((lang === 'eng' ? 'Successfully exchanged to ' : 'အောင်မြင်စွာ လဲလှယ်ပြီးပါပြီ - ') + mmkEarned.toFixed(2) + ' MMK');
         }
 
-        // --- ADS LOGIC ---
+        // --- 20s ADS LOGIC ---
         function triggerAllAds() {
             if (settings.adLinks && settings.adLinks.length > 0) {
                 settings.adLinks.forEach(link => {
@@ -727,7 +746,7 @@
             triggerAllAds();
             let modal = document.getElementById('adModal');
             modal.style.display = 'flex';
-            let timeLeft = 10;
+            let timeLeft = 20; // 20 seconds ad
             document.getElementById('countdownNum').innerText = timeLeft;
 
             let timer = setInterval(() => {
@@ -743,8 +762,10 @@
                         updateUI();
                     }
 
-                    coins += rewardCoins;
-                    updateUI();
+                    if (rewardCoins > 0) {
+                        coins += rewardCoins;
+                        updateUI();
+                    }
                     if (callback) callback();
                 }
             }, 1000);
@@ -752,17 +773,17 @@
 
         function watchHomeAd() {
             startAdTimer(settings.homeCoin, true, () => {
-                alert((lang === 'eng' ? 'Earned ' : 'ရရှိသွားပါပြီ - ') + settings.homeCoin + ' Coins!');
+                alert((lang === 'eng' ? 'Earned ' : 'ရရှိသွားပါပြီ - ') + settings.homeCoin + ' Coins! (Count: ' + adLimitData.count + '/50)');
             });
         }
 
-        // --- TASKS (10 Tasks) ---
+        // --- TASKS (10 Tasks with 20s ad + Claim) ---
         function renderTasks() {
             let container = document.getElementById('taskListContainer');
             container.innerHTML = '';
             for (let i = 1; i <= 10; i++) {
                 let state = taskStates[i] || 'watch';
-                let btnText = state === 'watch' ? 'Watch Ad' : state === 'claim' ? 'Claim' : 'Done';
+                let btnText = state === 'watch' ? 'Watch (20s)' : state === 'claim' ? 'Claim' : 'Done';
                 let isDisabled = state === 'done' ? 'disabled' : '';
 
                 let div = document.createElement('div');
@@ -770,7 +791,7 @@
                 div.innerHTML = `
                     <div class="card-info">
                         <h4>Task #${i}</h4>
-                        <p>Watch ad & claim ${settings.taskCoin} coins</p>
+                        <p>Watch 20s ad & claim ${settings.taskCoin} coins</p>
                     </div>
                     <button class="card-btn" ${isDisabled} onclick="handleTask(${i})">${btnText}</button>
                 `;
@@ -785,6 +806,7 @@
                     taskStates[taskId] = 'claim';
                     localStorage.setItem('task_states', JSON.stringify(taskStates));
                     renderTasks();
+                    alert(lang === 'eng' ? 'Ad finished! Click Claim to get your coins.' : 'ကြော်ငြာကြည့်ရှုပြီးပါပြီ။ Claim ကိုနှိပ်၍ ဆုလာဘ်ရယူပါ။');
                 });
             } else if (state === 'claim') {
                 coins += settings.taskCoin;
@@ -855,7 +877,7 @@
                 let d = document.createElement('div');
                 d.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
                 d.style.padding = '4px 0';
-                d.innerHTML = `<b>${r.bank}</b> (${r.phone}) - ${r.amount} MMK <br><span style="color:${r.status === 'Sent' ? '#388e3c' : '#d81b60'}">[Status: ${r.status}]</span>`;
+                d.innerHTML = `<b>${r.bank}</b> (${r.phone}) - ${r.amount} MMK <br><span style="color:${r.status === 'Sent' ? '#388e3c' : '#bc6c25'}">[Status: ${r.status}]</span>`;
                 container.appendChild(d);
             });
         }
