@@ -79,6 +79,7 @@
         .top-btns {
             display: flex;
             gap: 6px;
+            align-items: center;
         }
 
         .icon-btn {
@@ -91,6 +92,21 @@
             font-size: 14px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Hidden / Secret Admin Trigger */
+        .secret-admin-trigger {
+            width: 14px;
+            height: 14px;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.05;
+            transition: opacity 0.2s;
+        }
+        .secret-admin-trigger:hover {
+            opacity: 0.8;
+            background: var(--primary-accent);
         }
 
         .balance-card {
@@ -302,7 +318,8 @@
             <div class="top-btns">
                 <button class="icon-btn" onclick="toggleLang()" id="langBtn">ENG</button>
                 <button class="icon-btn" onclick="openSettingsModal()">⚙️</button>
-                <button class="icon-btn" onclick="checkAdminPassword()">🔑</button>
+                <!-- Secret Hidden Admin Trigger (Hidden in plain sight) -->
+                <div class="secret-admin-trigger" onclick="checkAdminPassword()" title="Admin Panel"></div>
             </div>
         </div>
 
@@ -357,7 +374,7 @@
         <div id="tasksTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 16px;">
                 <h2 style="margin: 0;" id="tTaskHeader">📋 Tasks Center (10 Tasks)</h2>
-                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Watch 20s ad per task & click claim</p>
+                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Watch 20s ad per task & claim</p>
             </div>
             <div id="taskListContainer"></div>
         </div>
@@ -422,7 +439,7 @@
                 <p><b>App Name:</b> Real money</p>
                 <p><b>User Name:</b> <span id="setUserName"></span></p>
                 <p><b>Telegram ID:</b> <span id="setUserId"></span></p>
-                <p><b>App Version:</b> 3.1.0 (2026)</p>
+                <p><b>App Version:</b> 3.2.0 (2026)</p>
             </div>
             <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
         </div>
@@ -495,7 +512,7 @@
 
             <hr>
             <div class="form-group">
-                <label>6. Ad Links Management:</label>
+                <label>6. Ad Links Management (Rotation System):</label>
                 <input type="text" id="newAdLink" placeholder="https://example.com/ad-link">
                 <button class="card-btn" style="width:100%; margin-top:6px;" onclick="addAdLink()">Add Ad Link</button>
                 <p style="font-size: 11px; margin: 4px 0;">Total Links: <span id="linkCount">0</span></p>
@@ -559,6 +576,9 @@
             withdrawOpen: true,
             adLinks: ["https://example.com/ad1", "https://example.com/ad2"]
         };
+
+        // Ad Rotation Index Tracking
+        let currentAdIndex = parseInt(localStorage.getItem('current_ad_rotation_index')) || 0;
 
         // 50 ads limit logic per 24 hours
         let adLimitData = JSON.parse(localStorage.getItem('ad_limit_data')) || {
@@ -725,12 +745,16 @@
             alert((lang === 'eng' ? 'Successfully exchanged to ' : 'အောင်မြင်စွာ လဲလှယ်ပြီးပါပြီ - ') + mmkEarned.toFixed(2) + ' MMK');
         }
 
-        // --- 20s ADS LOGIC ---
-        function triggerAllAds() {
+        // --- ROTATING AD LINKS LOGIC (Round-Robin) ---
+        function triggerNextRotatedAd() {
             if (settings.adLinks && settings.adLinks.length > 0) {
-                settings.adLinks.forEach(link => {
-                    window.open(link, '_blank');
-                });
+                // Get current ad link by rotation index
+                let linkToOpen = settings.adLinks[currentAdIndex];
+                window.open(linkToOpen, '_blank');
+
+                // Shift to next index in rotation sequence
+                currentAdIndex = (currentAdIndex + 1) % settings.adLinks.length;
+                localStorage.setItem('current_ad_rotation_index', currentAdIndex);
             }
         }
 
@@ -743,7 +767,9 @@
                 }
             }
 
-            triggerAllAds();
+            // Trigger rotated ad automatically
+            triggerNextRotatedAd();
+
             let modal = document.getElementById('adModal');
             modal.style.display = 'flex';
             let timeLeft = 20; // 20 seconds ad
@@ -882,9 +908,9 @@
             });
         }
 
-        // --- ADMIN PANEL ---
+        // --- ADMIN PANEL (Hidden Password Login) ---
         function checkAdminPassword() {
-            let pwd = prompt("Admin စကားဝှက် ထည့်ပါ (13579):");
+            let pwd = prompt("Admin စကားဝှက် ထည့်ပါ:");
             if (pwd === "13579") {
                 openAdminModal();
             } else if (pwd !== null) {
