@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nut Wallet - Mini App</title>
+    <title>Coin Reward Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -30,7 +30,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -49,20 +48,21 @@
             font-size: 14px;
         }
 
-        .settings-btn {
-            background: #fef4e7;
-            border: 2px solid var(--wood-dark);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
+        .top-btns {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            gap: 8px;
         }
 
-        /* Balance Wood Card */
+        .icon-btn {
+            background: #fef4e7;
+            border: 2px solid var(--wood-dark);
+            padding: 6px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
         .balance-card {
             background: linear-gradient(145deg, #c48b47, #965d25);
             border: 4px solid #523113;
@@ -71,7 +71,6 @@
             color: white;
             box-shadow: 0 8px 16px rgba(0,0,0,0.4);
             margin-bottom: 16px;
-            position: relative;
         }
 
         .balance-title {
@@ -82,23 +81,23 @@
         }
 
         .balance-amount {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             margin: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .balance-sub {
-            font-size: 13px;
-            opacity: 0.85;
+            font-size: 14px;
+            opacity: 0.9;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 8px;
+            border-radius: 8px;
+            display: inline-block;
         }
 
-        /* Action Buttons Grid */
         .action-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 12px;
             margin-bottom: 16px;
         }
@@ -107,45 +106,17 @@
             background: #fef4e7;
             border: 3px solid #825327;
             color: #4a2c11;
-            padding: 12px;
+            padding: 14px;
             border-radius: 14px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: 0.1s;
         }
 
-        .action-btn:active {
-            transform: scale(0.97);
-        }
-
-        /* Stats Wood Bar */
-        .stats-bar {
-            background: #523113;
-            border: 3px solid #36200c;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-around;
-            color: #fef4e7;
-            text-align: center;
-            margin-bottom: 16px;
-            font-size: 12px;
-        }
-
-        .stats-bar val {
-            display: block;
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffd54f;
-        }
-
-        /* Task Cards */
         .card-item {
             background: var(--card-bg);
             border: 3px solid #825327;
@@ -180,11 +151,12 @@
             cursor: pointer;
         }
 
-        .card-btn:active {
-            background: #c48b47;
+        .card-btn:disabled {
+            background: #ccc;
+            border-color: #999;
+            cursor: not-allowed;
         }
 
-        /* Bottom Nav Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -208,7 +180,7 @@
             align-items: center;
             gap: 4px;
             cursor: pointer;
-            width: 33%;
+            width: 50%;
         }
 
         .nav-item.active {
@@ -226,6 +198,37 @@
         .tab-content.active {
             display: block;
         }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: #fef4e7;
+            border: 4px solid #6e4724;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content h3 { margin-top: 0; color: #523113; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 2px solid #825327; border-radius: 8px; box-sizing: border-box; }
+        .close-btn { background: #d32f2f; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
@@ -233,75 +236,47 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="user-badge" id="userInfo">🐿️ Nut Player</div>
-            <button class="settings-btn" onclick="alert('Settings ဝင်ရန်')">⚙️</button>
+            <div class="user-badge" id="userInfo">🪙 Player</div>
+            <div class="top-btns">
+                <button class="icon-btn" onclick="toggleLang()" id="langBtn">ENG</button>
+                <button class="icon-btn" onclick="checkAdminPassword()">⚙️ Admin</button>
+            </div>
         </div>
 
         <!-- HOME TAB -->
         <div id="homeTab" class="tab-content active">
-            <!-- Balance Card -->
             <div class="balance-card">
-                <div class="balance-title">Total Balance</div>
+                <div class="balance-title" id="tBalanceTitle">Total Balance</div>
                 <div class="balance-amount">
-                    <span>🪙</span> <span id="balanceVal">8.60</span> <span style="font-size: 16px;">USDT</span>
+                    <span id="coinVal">0</span> <span style="font-size: 16px;">Coins</span>
                 </div>
-                <div class="balance-sub">≈ 8.60 USD</div>
+                <div class="balance-sub">≈ <span id="mmkVal">0</span> MMK</div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="action-grid">
-                <button class="action-btn" onclick="withdrawModal()">⬆️ Withdraw</button>
-                <button class="action-btn" onclick="switchTab('tasks')">📋 Tasks</button>
-            </div>
-
-            <!-- Stats Bar -->
-            <div class="stats-bar">
-                <div>Earned <val id="earnedVal">8.60</val></div>
-                <div>|</div>
-                <div>Tasks done <val id="taskDoneVal">10</val></div>
-                <div>|</div>
-                <div>Referrals <val>0</val></div>
-            </div>
-
-            <!-- Main Menu Cards -->
-            <div class="card-item">
-                <div class="card-info">
-                    <h4>Earn your first USDT</h4>
-                    <p>Complete simple tasks, get paid instantly</p>
+                <div class="card-item" style="margin:0; background: #fef4e7;">
+                    <div class="card-info">
+                        <h4 id="tEarnCoinTitle">Earn your coin</h4>
+                        <p id="tEarnCoinSub">Watch ad & earn coins (0/50 today)</p>
+                    </div>
+                    <button class="card-btn" id="homeWatchBtn" onclick="watchHomeAd()">Watch</button>
                 </div>
-                <button class="card-btn" onclick="switchTab('tasks')">➜</button>
-            </div>
-
-            <div class="card-item">
-                <div class="card-info">
-                    <h4>Invite & earn 2.00 USDT</h4>
-                    <p>Every active friend pays you</p>
-                </div>
-                <button class="card-btn" onclick="alert('Link မျှဝေရန်')">➜</button>
+                <button class="action-btn" onclick="requestWithdraw()" id="tWithdrawBtn">
+                    <span>💸 Withdraw to MMK</span>
+                    <span>➔</span>
+                </button>
             </div>
         </div>
 
         <!-- TASKS TAB -->
         <div id="tasksTab" class="tab-content">
             <div style="text-align: center; color: #fef4e7; margin-bottom: 16px;">
-                <h2 style="margin: 0;">🌲 Tasks Center 🌲</h2>
-                <p style="font-size: 13px; opacity: 0.8;">ကြော်ငြာကြည့်ပြီး USDT ရှာပါ</p>
+                <h2 style="margin: 0;" id="tTaskHeader">📋 Tasks Center</h2>
+                <p style="font-size: 13px; opacity: 0.8;" id="tTaskSub">Complete tasks and claim coins</p>
             </div>
-
-            <div class="card-item">
-                <div class="card-info">
-                    <h4>Watch 5 Ads</h4>
-                    <p>+0.20 USDT · 5/5 today</p>
-                </div>
-                <button class="card-btn" onclick="watchAdTask()">Watch</button>
-            </div>
-
-            <div class="card-item">
-                <div class="card-info">
-                    <h4>Lucky Popup</h4>
-                    <p>+0.05 USDT · Available</p>
-                </div>
-                <button class="card-btn" onclick="luckyTask()">Claim</button>
+            
+            <div id="taskListContainer">
+                <!-- 10 Tasks will be generated dynamically -->
             </div>
         </div>
     </div>
@@ -310,28 +285,121 @@
     <div class="bottom-nav">
         <button class="nav-item active" id="navHome" onclick="switchTab('home')">
             <span class="icon">🏠</span>
-            <span>Home</span>
+            <span id="tNavHome">Home</span>
         </button>
         <button class="nav-item" id="navTasks" onclick="switchTab('tasks')">
             <span class="icon">📋</span>
-            <span>Tasks</span>
+            <span id="tNavTasks">Tasks</span>
         </button>
-        <button class="nav-item" onclick="alert('Referrals စာမျက်နှာ')">
-            <span class="icon">👥</span>
-            <span>Referrals</span>
-        </button>
+    </div>
+
+    <!-- ADMIN MODAL -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h3>🔐 Admin Control Panel</h3>
+            
+            <div class="form-group">
+                <label>1. Home Ad Coin Reward:</label>
+                <input type="number" id="admHomeCoin" value="10">
+            </div>
+
+            <div class="form-group">
+                <label>2. Task Ad Coin Reward (per task):</label>
+                <input type="number" id="admTaskCoin" value="5">
+            </div>
+
+            <div class="form-group">
+                <label>3. Exchange Rate (1 Coin = ? MMK):</label>
+                <input type="number" step="0.1" id="admExchangeRate" value="1.0">
+            </div>
+
+            <hr>
+            <div class="form-group">
+                <label>4. Ad Links Management (Round-robin):</label>
+                <input type="text" id="newAdLink" placeholder="https://example.com/ad-link">
+                <button class="card-btn" style="width:100%; margin-top:6px;" onclick="addAdLink()">Add Ad Link</button>
+                <p style="font-size: 11px; margin: 4px 0;">Total Links: <span id="linkCount">0</span></p>
+                <div id="linkList" style="max-height: 80px; overflow-y:auto; font-size:11px; background:#fff; padding:4px; border-radius:4px;"></div>
+            </div>
+
+            <hr>
+            <div class="form-group">
+                <label>5. User Management & Search (Tg ID / Name):</label>
+                <input type="text" id="searchUserQuery" placeholder="Search by ID or Name..." oninput="renderUserList()">
+                <p style="font-size: 11px; margin: 4px 0;">Stats: Total: <span id="statTotal">0</span> | Active: <span id="statActive">0</span> | Inactive: <span id="statInactive">0</span></p>
+                <div id="userListContainer" style="max-height: 120px; overflow-y:auto; font-size:11px; background:#fff; padding:4px; border-radius:4px;"></div>
+            </div>
+
+            <hr>
+            <div class="form-group">
+                <label>6. Manual Coin / MMK Adjustment (by Tg ID):</label>
+                <input type="text" id="adjUserId" placeholder="Enter Telegram ID">
+                <input type="number" id="adjCoinVal" placeholder="Coin (+/-)" style="margin-top:4px;">
+                <input type="number" id="adjMmkVal" placeholder="MMK (+/-)" style="margin-top:4px;">
+                <button class="card-btn" style="width:100%; margin-top:6px;" onclick="applyUserAdjustment()">Apply Changes</button>
+            </div>
+
+            <button class="card-btn" style="background:#4a2c11; color:#fff; width:100%; margin-top:10px;" onclick="saveAdminSettings()">Save Settings</button>
+            <button class="close-btn" onclick="closeAdminModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- AD WATCHING SIMULATOR MODAL -->
+    <div class="modal" id="adModal">
+        <div class="modal-content" style="text-align: center;">
+            <h3>📺 Watching Advertisement</h3>
+            <p id="adTimerText">Please wait 15 seconds...</p>
+            <h1 id="countdownNum" style="font-size: 40px; color: #c48b47; margin: 10px 0;">15</h1>
+        </div>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        let balance = parseFloat(localStorage.getItem('nut_balance')) || 8.60;
-        let tasksDone = parseInt(localStorage.getItem('nut_tasks')) || 10;
-        updateUI();
+        let lang = localStorage.getItem('app_lang') || 'my';
+        let coins = parseInt(localStorage.getItem('user_coins')) || 0;
+        let homeAdCount = parseInt(localStorage.getItem('home_ad_count')) || 0;
+        let lastHomeAdDate = localStorage.getItem('last_home_ad_date') || '';
+        
+        let settings = JSON.parse(localStorage.getItem('admin_settings')) || {
+            homeCoin: 10,
+            taskCoin: 5,
+            exchangeRate: 1.0,
+            adLinks: ["https://example.com/ad1", "https://example.com/ad2"]
+        };
 
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('userInfo').innerText = `🐿️ ${tg.initDataUnsafe.user.first_name}`;
+        let currentUser = {
+            id: tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id.toString() : "123456789",
+            name: tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "DemoUser",
+            active: true
+        };
+
+        let allUsers = JSON.parse(localStorage.getItem('all_users_db')) || [
+            currentUser,
+            { id: "987654321", name: "Aung Aung", active: true },
+            { id: "555444333", name: "Mya Mya", active: false }
+        ];
+
+        let taskStates = JSON.parse(localStorage.getItem('task_states')) || {};
+        let currentLinkIndex = 0;
+
+        initApp();
+
+        function initApp() {
+            checkDailyReset();
+            updateUI();
+            renderTasks();
+            updateLanguageText();
+        }
+
+        function checkDailyReset() {
+            let today = new Date().toDateString();
+            if (lastHomeAdDate !== today) {
+                homeAdCount = 0;
+                localStorage.setItem('home_ad_count', 0);
+                localStorage.setItem('last_home_ad_date', today);
+            }
         }
 
         function switchTab(tabName) {
@@ -349,43 +417,265 @@
             }
         }
 
-        function watchAdTask() {
-            alert('ကြော်ငြာ စတင်ဖွင့်နေပါပြီ...');
-            setTimeout(() => {
-                balance += 0.20;
-                tasksDone += 1;
-                saveData();
-                tg.HapticFeedback.notificationOccurred('success');
-                alert('ဂုဏ်ယူပါတယ်! +0.20 USDT ရရှိသွားပါပြီ။');
-            }, 2000);
+        function toggleLang() {
+            lang = lang === 'my' ? 'eng' : 'my';
+            localStorage.setItem('app_lang', lang);
+            document.getElementById('langBtn').innerText = lang.toUpperCase();
+            updateLanguageText();
         }
 
-        function luckyTask() {
-            balance += 0.05;
-            tasksDone += 1;
-            saveData();
-            tg.HapticFeedback.notificationOccurred('success');
-            alert('ဆုလာဘ် +0.05 USDT ရရှိပါပြီ!');
-        }
-
-        function withdrawModal() {
-            if (balance < 1.00) {
-                alert('ငွေထုတ်ရန် အနည်းဆုံး 1.00 USDT လိုအပ်ပါသည်။');
-                return;
+        function updateLanguageText() {
+            if (lang === 'eng') {
+                document.getElementById('tBalanceTitle').innerText = "Total Balance";
+                document.getElementById('tEarnCoinTitle').innerText = "Earn your coin";
+                document.getElementById('tEarnCoinSub').innerText = `Watch ad & earn coins (${homeAdCount}/50 today)`;
+                document.getElementById('homeWatchBtn').innerText = "Watch";
+                document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 Withdraw to MMK</span><span>➔</span>";
+                document.getElementById('tTaskHeader').innerText = "📋 Tasks Center";
+                document.getElementById('tTaskSub').innerText = "Complete tasks and claim coins";
+                document.getElementById('tNavHome').innerText = "Home";
+                document.getElementById('tNavTasks').innerText = "Tasks";
+            } else {
+                document.getElementById('tBalanceTitle').innerText = "စုစုပေါင်း လက်ကျန်ငွေ";
+                document.getElementById('tEarnCoinTitle').innerText = "ဒင်္ဂါးပြား ရှာရန်";
+                document.getElementById('tEarnCoinSub').innerText = `ကြော်ငြာကြည့်ပြီး ဆုလာဘ်ယူပါ (${homeAdCount}/50 ကြိမ်)`;
+                document.getElementById('homeWatchBtn').innerText = "ကြည့်မည်";
+                document.getElementById('tWithdrawBtn').innerHTML = "<span>💸 MMK သို့ ငွေထုတ်မည်</span><span>➔</span>";
+                document.getElementById('tTaskHeader').innerText = "📋 တာဝန်များ (Tasks)";
+                document.getElementById('tTaskSub').innerText = "ကြော်ငြာကြည့်၍ တာဝန်ပြီးမြောက်အောင်လုပ်ပါ";
+                document.getElementById('tNavHome').innerText = "ပင်မစာမျက်နှာ";
+                document.getElementById('tNavTasks').innerText = "တာဝန်များ";
             }
-            alert('ငွေထုတ်ယူရန် တောင်းဆိုမှု အောင်မြင်ပါသည်။');
-        }
-
-        function saveData() {
-            localStorage.setItem('nut_balance', balance.toFixed(2));
-            localStorage.setItem('nut_tasks', tasksDone);
-            updateUI();
         }
 
         function updateUI() {
-            document.getElementById('balanceVal').innerText = balance.toFixed(2);
-            document.getElementById('earnedVal').innerText = balance.toFixed(2);
-            document.getElementById('taskDoneVal').innerText = tasksDone;
+            document.getElementById('coinVal').innerText = coins;
+            let mmk = (coins * settings.exchangeRate).toFixed(2);
+            document.getElementById('mmkVal').innerText = mmk;
+            localStorage.setItem('user_coins', coins);
+        }
+
+        function getNextAdLink() {
+            if (!settings.adLinks || settings.adLinks.length === 0) return null;
+            let link = settings.adLinks[currentLinkIndex];
+            currentLinkIndex = (currentLinkIndex + 1) % settings.adLinks.length;
+            return link;
+        }
+
+        function startAdTimer(rewardCoins, callback) {
+            let link = getNextAdLink();
+            if (link) {
+                window.open(link, '_blank');
+            }
+
+            let modal = document.getElementById('adModal');
+            modal.style.display = 'flex';
+            let timeLeft = 15;
+            document.getElementById('countdownNum').innerText = timeLeft;
+
+            let timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdownNum').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    modal.style.display = 'none';
+                    coins += rewardCoins;
+                    updateUI();
+                    tg.HapticFeedback.notificationOccurred('success');
+                    if (callback) callback();
+                }
+            }, 1000);
+        }
+
+        function watchHomeAd() {
+            if (homeAdCount >= 50) {
+                alert(lang === 'eng' ? 'Daily limit (50/50) reached. Resets in 24 hours.' : 'ယနေ့အတွက် အကြိမ် ၅၀ ပြည့်သွားပါပြီ။ ၂၄ နာရီမှ ပြန်ကြည့်ပါ။');
+                return;
+            }
+            startAdTimer(settings.homeCoin, () => {
+                homeAdCount++;
+                localStorage.setItem('home_ad_count', homeAdCount);
+                updateLanguageText();
+                alert((lang === 'eng' ? 'Earned ' : 'ရရှိသွားပါပြီ - ') + settings.homeCoin + ' Coins!');
+            });
+        }
+
+        function renderTasks() {
+            let container = document.getElementById('taskListContainer');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 10; i++) {
+                let state = taskStates[i] || 'watch';
+                let btnText = state === 'watch' ? (lang === 'eng' ? 'Watch Ad' : 'ကြော်ငြာကြည့်ရန်') : 
+                              state === 'claim' ? (lang === 'eng' ? 'Claim' : 'ရယူမည်') : 
+                              (lang === 'eng' ? 'Completed' : 'ပြီးပြီ');
+                let isDisabled = state === 'done' ? 'disabled' : '';
+
+                let div = document.createElement('div');
+                div.className = 'card-item';
+                div.innerHTML = `
+                    <div class="card-info">
+                        <h4>Task #${i}</h4>
+                        <p>${lang === 'eng' ? 'Watch 15s ad to earn coins' : '၁၅ စက္ကန့် ကြော်ငြာကြည့်ပါ'}</p>
+                    </div>
+                    <button class="card-btn" ${isDisabled} onclick="handleTaskClick(${i})">${btnText}</button>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function handleTaskClick(taskId) {
+            let state = taskStates[taskId] || 'watch';
+            if (state === 'watch') {
+                startAdTimer(0, () => {
+                    taskStates[taskId] = 'claim';
+                    localStorage.setItem('task_states', JSON.stringify(taskStates));
+                    renderTasks();
+                    alert(lang === 'eng' ? 'Ad watched! Now click Claim.' : 'ကြော်ငြာကြည့်ပြီးပါပြီ။ Claim ကို နှိပ်ပါ။');
+                });
+            } else if (state === 'claim') {
+                coins += settings.taskCoin;
+                taskStates[taskId] = 'done';
+                localStorage.setItem('task_states', JSON.stringify(taskStates));
+                updateUI();
+                renderTasks();
+                alert((lang === 'eng' ? 'Claimed ' : 'ရရှိသွားပါပြီ - ') + settings.taskCoin + ' Coins!');
+            }
+        }
+
+        function requestWithdraw() {
+            let mmk = (coins * settings.exchangeRate);
+            alert(lang === 'eng' ? `Withdrawal requested for ${mmk} MMK.` : `ငွေထုတ်ရန် တောင်းဆိုမှု (${mmk} MMK) ပေးပို့ပြီးပါပြီ။`);
+        }
+
+        // --- ADMIN PASSWORD & PANEL FUNCTIONS ---
+        function checkAdminPassword() {
+            let pwd = prompt(lang === 'eng' ? "Enter Admin Password:" : "Admin စကားဝှက် ထည့်ပါ:");
+            if (pwd === "13579") {
+                openAdminModal();
+            } else if (pwd !== null) {
+                alert(lang === 'eng' ? "Incorrect Password!" : "စကားဝှက် မှားယွင်းနေပါသည်။");
+            }
+        }
+
+        function openAdminModal() {
+            document.getElementById('admHomeCoin').value = settings.homeCoin;
+            document.getElementById('admTaskCoin').value = settings.taskCoin;
+            document.getElementById('admExchangeRate').value = settings.exchangeRate;
+            renderAdminLinks();
+            renderUserList();
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function saveAdminSettings() {
+            settings.homeCoin = parseInt(document.getElementById('admHomeCoin').value) || 10;
+            settings.taskCoin = parseInt(document.getElementById('admTaskCoin').value) || 5;
+            settings.exchangeRate = parseFloat(document.getElementById('admExchangeRate').value) || 1.0;
+            localStorage.setItem('admin_settings', JSON.stringify(settings));
+            alert('Admin settings saved successfully!');
+            closeAdminModal();
+            updateUI();
+        }
+
+        function addAdLink() {
+            let linkInput = document.getElementById('newAdLink');
+            let val = linkInput.value.trim();
+            if (val) {
+                settings.adLinks.push(val);
+                linkInput.value = '';
+                localStorage.setItem('admin_settings', JSON.stringify(settings));
+                renderAdminLinks();
+            }
+        }
+
+        function removeAdLink(index) {
+            settings.adLinks.splice(index, 1);
+            localStorage.setItem('admin_settings', JSON.stringify(settings));
+            renderAdminLinks();
+        }
+
+        function renderAdminLinks() {
+            let listDiv = document.getElementById('linkList');
+            listDiv.innerHTML = '';
+            document.getElementById('linkCount').innerText = settings.adLinks.length;
+            settings.adLinks.forEach((link, idx) => {
+                let d = document.createElement('div');
+                d.style.display = 'flex';
+                d.style.justify = 'space-between';
+                d.style.alignItems = 'center';
+                d.style.marginBottom = '2px';
+                d.innerHTML = `<span>${idx+1}. ${link.substring(0, 30)}...</span> <button onclick="removeAdLink(${idx})" style="background:red; color:white; border:none; border-radius:3px; cursor:pointer;">X</button>`;
+                listDiv.appendChild(d);
+            });
+        }
+
+        function renderUserList() {
+            let query = document.getElementById('searchUserQuery').value.toLowerCase();
+            let container = document.getElementById('userListContainer');
+            container.innerHTML = '';
+
+            let total = allUsers.length;
+            let activeCount = allUsers.filter(u => u.active).length;
+            let inactiveCount = total - activeCount;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statActive').innerText = activeCount;
+            document.getElementById('statInactive').innerText = inactiveCount;
+
+            let filtered = allUsers.filter(u => u.name.toLowerCase().includes(query) || u.id.includes(query));
+
+            filtered.forEach(u => {
+                let d = document.createElement('div');
+                d.style.display = 'flex';
+                d.style.justify = 'space-between';
+                d.style.alignItems = 'center';
+                d.style.marginBottom = '4px';
+                d.style.borderBottom = '1px solid #ddd';
+                d.style.paddingBottom = '2px';
+                d.innerHTML = `
+                    <span><b>${u.name}</b> (ID: ${u.id}) - ${u.active ? '🟢 Active' : '🔴 Banned'}</span>
+                    <button onclick="toggleUserBan('${u.id}')" style="background:${u.active ? '#d32f2f' : '#388e3c'}; color:white; border:none; border-radius:3px; cursor:pointer; padding:2px 6px;">
+                        ${u.active ? 'Ban' : 'Unban'}
+                    </button>
+                `;
+                container.appendChild(d);
+            });
+        }
+
+        function toggleUserBan(id) {
+            let u = allUsers.find(item => item.id === id);
+            if (u) {
+                u.active = !u.active;
+                localStorage.setItem('all_users_db', JSON.stringify(allUsers));
+                renderUserList();
+            }
+        }
+
+        function applyUserAdjustment() {
+            let uid = document.getElementById('adjUserId').value.trim();
+            let cAdd = parseInt(document.getElementById('adjCoinVal').value) || 0;
+            let mAdd = parseInt(document.getElementById('adjMmkVal').value) || 0;
+
+            if (!uid) {
+                alert('Please enter a valid User Telegram ID.');
+                return;
+            }
+
+            if (uid === currentUser.id) {
+                coins += cAdd;
+                if (coins < 0) coins = 0;
+                updateUI();
+                alert(`Successfully adjusted for current user. Coins: ${cAdd >= 0 ? '+' : ''}${cAdd}`);
+            } else {
+                alert(`Manual adjustment for User ID ${uid} registered successfully.`);
+            }
+            document.getElementById('adjUserId').value = '';
+            document.getElementById('adjCoinVal').value = '';
+            document.getElementById('adjMmkVal').value = '';
         }
     </script>
 </body>
