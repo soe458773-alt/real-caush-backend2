@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real money</title>
+    <!-- PopCash Verification Meta Tag Added -->
+    <meta name="ppck-ver" content="fcdd12c1878c573ec6ad36a7d5cf6bf8" />
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -577,10 +579,8 @@
             adLinks: ["https://example.com/ad1", "https://example.com/ad2"]
         };
 
-        // Ad Rotation Index Tracking
         let currentAdIndex = parseInt(localStorage.getItem('current_ad_rotation_index')) || 0;
 
-        // 50 ads limit logic per 24 hours
         let adLimitData = JSON.parse(localStorage.getItem('ad_limit_data')) || {
             count: 0,
             resetTime: Date.now() + 86400000
@@ -713,12 +713,11 @@
             let now = Date.now();
             if (now >= adLimitData.resetTime) {
                 adLimitData.count = 0;
-                adLimitData.resetTime = now + 86400000; // 24 hours
+                adLimitData.resetTime = now + 86400000;
                 localStorage.setItem('ad_limit_data', JSON.stringify(adLimitData));
             }
         }
 
-        // --- MARKET EXCHANGE ---
         function calcExchange() {
             let val = parseInt(document.getElementById('convertCoinInput').value) || 0;
             let rateMultiplier = settings.exMmk / settings.exCoins;
@@ -745,14 +744,10 @@
             alert((lang === 'eng' ? 'Successfully exchanged to ' : 'အောင်မြင်စွာ လဲလှယ်ပြီးပါပြီ - ') + mmkEarned.toFixed(2) + ' MMK');
         }
 
-        // --- ROTATING AD LINKS LOGIC (Round-Robin) ---
         function triggerNextRotatedAd() {
             if (settings.adLinks && settings.adLinks.length > 0) {
-                // Get current ad link by rotation index
                 let linkToOpen = settings.adLinks[currentAdIndex];
                 window.open(linkToOpen, '_blank');
-
-                // Shift to next index in rotation sequence
                 currentAdIndex = (currentAdIndex + 1) % settings.adLinks.length;
                 localStorage.setItem('current_ad_rotation_index', currentAdIndex);
             }
@@ -767,12 +762,11 @@
                 }
             }
 
-            // Trigger rotated ad automatically
             triggerNextRotatedAd();
 
             let modal = document.getElementById('adModal');
             modal.style.display = 'flex';
-            let timeLeft = 20; // 20 seconds ad
+            let timeLeft = 20;
             document.getElementById('countdownNum').innerText = timeLeft;
 
             let timer = setInterval(() => {
@@ -803,7 +797,6 @@
             });
         }
 
-        // --- TASKS (10 Tasks with 20s ad + Claim) ---
         function renderTasks() {
             let container = document.getElementById('taskListContainer');
             container.innerHTML = '';
@@ -844,7 +837,6 @@
             }
         }
 
-        // --- WITHDRAWAL ---
         function openWithdrawModal() {
             if (!settings.withdrawOpen) {
                 alert(lang === 'eng' ? 'Withdrawals are currently closed by Admin.' : 'ငွေထုတ်ယူခြင်းကို အက်မင်မှ ခေတ္တပိတ်ထားပါသည်။');
@@ -908,7 +900,6 @@
             });
         }
 
-        // --- ADMIN PANEL (Hidden Password Login) ---
         function checkAdminPassword() {
             let pwd = prompt("Admin စကားဝှက် ထည့်ပါ:");
             if (pwd === "13579") {
